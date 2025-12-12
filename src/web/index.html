@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem 0; margin-bottom: 2rem; }
+        .result-box { display: none; margin-top: 2rem; }
+        .gauge-container { width: 300px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+    <div class="header text-center">
+        <h1>Customer Churn Prediction</h1>
+        <p>Enter customer details to predict churn risk</p>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="card p-4">
+                    <form id="churnForm">
+                        <h4 class="mb-3">Demographics</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" name="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Senior Citizen</label>
+                                <select class="form-select" name="SeniorCitizen">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Partner</label>
+                                <select class="form-select" name="Partner">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Dependents</label>
+                                <select class="form-select" name="Dependents">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h4 class="mb-3">Services</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Tenure (Months)</label>
+                                <input type="number" class="form-control" name="tenure" value="1" min="0" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Service</label>
+                                <select class="form-select" name="PhoneService">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Multiple Lines</label>
+                                <select class="form-select" name="MultipleLines">
+                                    <option value="No phone service">No phone service</option>
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Internet Service</label>
+                                <select class="form-select" name="InternetService">
+                                    <option value="DSL">DSL</option>
+                                    <option value="Fiber optic">Fiber optic</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <!-- Security and Support -->
+                            <div class="col-md-4">
+                                <label class="form-label">Online Security</label>
+                                <select class="form-select" name="OnlineSecurity">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No internet service">No internet service</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Online Backup</label>
+                                <select class="form-select" name="OnlineBackup">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No internet service">No internet service</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Device Protection</label>
+                                <select class="form-select" name="DeviceProtection">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No internet service">No internet service</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Tech Support</label>
+                                <select class="form-select" name="TechSupport">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No internet service">No internet service</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Streaming TV</label>
+                                <select class="form-select" name="StreamingTV">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No internet service">No internet service</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Streaming Movies</label>
+                                <select class="form-select" name="StreamingMovies">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No internet service">No internet service</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h4 class="mb-3">Account</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Contract</label>
+                                <select class="form-select" name="Contract">
+                                    <option value="Month-to-month">Month-to-month</option>
+                                    <option value="One year">One year</option>
+                                    <option value="Two year">Two year</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Paperless Billing</label>
+                                <select class="form-select" name="PaperlessBilling">
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Payment Method</label>
+                                <select class="form-select" name="PaymentMethod">
+                                    <option value="Electronic check">Electronic check</option>
+                                    <option value="Mailed check">Mailed check</option>
+                                    <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+                                    <option value="Credit card (automatic)">Credit card (automatic)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Monthly Charges</label>
+                                <input type="number" step="0.01" class="form-control" name="MonthlyCharges" value="50.0" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Total Charges</label>
+                                <input type="number" step="0.01" class="form-control" name="TotalCharges" value="50.0" required>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Predict Churn</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row result-box" id="resultBox">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="card p-4">
+                    <h3 class="text-center mb-4">Prediction Result</h3>
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center">
+                            <h4 id="predictionText" class="display-6 fw-bold"></h4>
+                            <p class="text-muted">Churn Probability</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="gauge-container">
+                                <canvas id="gaugeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h5>Key Factors / Reasoning:</h5>
+                        <ul id="reasoningList" class="list-group list-group-flush">
+                            <!-- Filled by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('churnForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                if (key === 'tenure' || key === 'SeniorCitizen') {
+                    data[key] = parseInt(value);
+                } else if (key === 'MonthlyCharges' || key === 'TotalCharges') {
+                    data[key] = parseFloat(value);
+                } else {
+                    data[key] = value;
+                }
+            });
+
+            try {
+                const response = await fetch('http://localhost:8000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('API Request failed');
+                }
+
+                const result = await response.json();
+                displayResult(result);
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        let chartInstance = null;
+
+        function displayResult(result) {
+            document.getElementById('resultBox').style.display = 'block';
+            
+            const predText = document.getElementById('predictionText');
+            predText.textContent = result.prediction === 'Yes' ? 'High Risk' : 'Low Risk';
+            predText.className = result.prediction === 'Yes' ? 'display-6 fw-bold text-danger' : 'display-6 fw-bold text-success';
+            
+            // Update List
+            const list = document.getElementById('reasoningList');
+            list.innerHTML = '';
+            result.reasoning.forEach(r => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.textContent = r;
+                list.appendChild(li);
+            });
+
+            // Chart
+            const ctx = document.getElementById('gaugeChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            const probability = result.probability * 100;
+            
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [probability, 100 - probability],
+                        backgroundColor: [
+                            result.prediction === 'Yes' ? '#dc3545' : '#28a745', 
+                            '#e9ecef'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    circumference: 180,
+                    rotation: -90,
+                    cutout: '75%',
+                    plugins: {
+                        tooltip: { enabled: false },
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: result.probability.toFixed(2),
+                            position: 'bottom',
+                            font: { size: 24 }
+                        }
+                    }
+                }
+            });
+            
+            // Scroll to result
+            document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
