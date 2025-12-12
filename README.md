@@ -40,6 +40,14 @@ Open the `src/web/index.html` file directly in your web browser.
 - You do not need a separate web server for the frontend in local mode.
 - Simply double-click the file or drag it into your browser window.
 
+### 6. Run the Streamlit App (Developer Dashboard)
+To launch the new interactive dashboard:
+```bash
+streamlit run src/app.py
+```
+- Access it at: `http://localhost:8501`
+- Features: Adjust inputs, view churn probability gauge, and explore feature importance.
+
 ## Running with Docker
 If you prefer using Docker, you can run the entire stack with a single command:
 ```bash
